@@ -49,7 +49,7 @@ def part_two(ranges: list[Range]) -> int:
 
         for r in full_range:
             r_length = len(str(r))
-            factorials = find_factorials(r_length)
+            factorials = find_factors(r_length)
             for factorial in factorials:
                 parts = split_string(str(r), factorial)
                 first_part = parts[0]
@@ -66,28 +66,14 @@ def part_two(ranges: list[Range]) -> int:
 
 # length=6 -> [1, 2, 3]
 # length=4 -> [1, 2]
-def find_factorials(length: int) -> list[int]:
-    factorials = []
-    r = range(1, length)
-    for i in r:
-        if length % i == 0:
-            factorials.append(i)
-
-    return factorials
+def find_factors(length: int) -> list[int]:
+    return [i for i in range(1, length) if length % i == 0]
 
 
 # s="123123" factorial=2 -> ["123", "123"]
 # s="123123" factorial=3 -> ["12", "31", "23"]
-def split_string(s: str, factorial: int) -> list[str]:
-    parts = []
-    temp = ""
-    for char in s:
-        temp += char
-        if len(temp) == factorial:
-            parts.append(temp)
-            temp = ""
-
-    return parts
+def split_string(s: str, factor: int) -> list[str]:
+    return [s[i : i + factor] for i in range(0, len(s), factor)]
 
 
 def main():

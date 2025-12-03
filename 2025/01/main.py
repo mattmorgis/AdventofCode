@@ -9,7 +9,7 @@ class Rotation:
 
 def parse_input() -> list[Rotation]:
     rotations = []
-    with open("input.txt") as file:
+    with open("input-test.txt") as file:
         while line := file.readline().rstrip():
             direction = line[0]
             distance = int(line[1:])
@@ -29,34 +29,28 @@ def day_one(rotations: list[Rotation]) -> Tuple[int, int]:
         print(
             f"Rotation.direction: {rotation.direction} \t Rotation.distance: {rotation.distance}"
         )
-        if rotation.distance > end:
-            passes_zero = passes_zero + int(rotation.distance / end)
-            rotation.distance = rotation.distance % end
 
-        landed_on_zero = current == 0
         if rotation.direction == "R":
-            current = current + rotation.distance
-            if current == end:
-                current = start
-            elif current > end:
-                if not landed_on_zero:
-                    passes_zero = passes_zero + 1
-                    print(f"**passes zero R: {passes_zero}")
-                current = abs(end - current)
+            new_pos = current + rotation.distance
+            if new_pos >= 100:
+                passes_zero += new_pos // 100
+                print(f"**passes zero R: {passes_zero}")
+            current = new_pos % 100
         else:
-            current = current - rotation.distance
-            if current < start:
-                if not landed_on_zero:
-                    passes_zero = passes_zero + 1
-                    print(f"**passes zero L: {passes_zero}")
-                current = end + current
+            new_pos = current - rotation.distance
+            if new_pos <= 0:
+                if new_pos == 0:
+                    passes_zero += 1
+                else:
+                    passes_zero += abs(new_pos // 100)
+                print(f"**passes zero L: {passes_zero}")
+            current = new_pos % 100
 
         print(f"current dial: {current}")
 
-        if current == start:
-            ends_on_zero = ends_on_zero + 1
-            passes_zero = passes_zero + 1
-            print(f"**lands on zero: {passes_zero}")
+        if current == 0:
+            ends_on_zero += 1
+            print(f"**lands on zero: {ends_on_zero}")
 
     return (ends_on_zero, passes_zero)
 
