@@ -51,19 +51,9 @@ def part_two(ranges: list[Range]) -> int:
             r_length = len(str(r))
             factorials = find_factorials(r_length)
             for factorial in factorials:
-                is_valid = True
-                print(f"r: {r} \t factorial: {factorial}")
                 parts = split_string(str(r), factorial)
-                print(f"parts: {parts}")
                 first_part = parts[0]
-                for part in parts[1:]:
-                    if factorial == 2:
-                        print(f"part: {part}")
-                        print(f"first_part: {first_part}")
-                    if part != first_part:
-                        is_valid = False
-
-                if is_valid:
+                if first_part * (r_length // factorial) == str(r):
                     invalid_ids.append(r)
                     print()
                     print("**")
@@ -74,6 +64,8 @@ def part_two(ranges: list[Range]) -> int:
     return sum(invalid_ids)
 
 
+# length=6 -> [1, 2, 3]
+# length=4 -> [1, 2]
 def find_factorials(length: int) -> list[int]:
     factorials = []
     r = range(1, length)
@@ -84,6 +76,8 @@ def find_factorials(length: int) -> list[int]:
     return factorials
 
 
+# s="123123" factorial=2 -> ["123", "123"]
+# s="123123" factorial=3 -> ["12", "31", "23"]
 def split_string(s: str, factorial: int) -> list[str]:
     parts = []
     temp = ""
