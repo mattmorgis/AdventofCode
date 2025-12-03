@@ -27,12 +27,7 @@ def part_one(ranges: list[Range]) -> int:
                 first_part = str(r)[:mid_point]
                 second_part = str(r)[mid_point:]
 
-                is_invalid = True
-                for i in range(len(first_part)):
-                    if first_part[i] != second_part[i]:
-                        is_invalid = False
-
-                if is_invalid:
+                if first_part == second_part:
                     invalid_ids.append(r)
                     print()
                     print("**")
@@ -49,11 +44,11 @@ def part_two(ranges: list[Range]) -> int:
 
         for r in full_range:
             r_length = len(str(r))
-            factorials = find_factors(r_length)
-            for factorial in factorials:
-                parts = split_string(str(r), factorial)
+            factors = find_factors(r_length)
+            for factor in factors:
+                parts = split_string(str(r), factor)
                 first_part = parts[0]
-                if first_part * (r_length // factorial) == str(r):
+                if first_part * (r_length // factor) == str(r):
                     invalid_ids.append(r)
                     print()
                     print("**")
@@ -70,18 +65,18 @@ def find_factors(length: int) -> list[int]:
     return [i for i in range(1, length) if length % i == 0]
 
 
-# s="123123" factorial=2 -> ["123", "123"]
-# s="123123" factorial=3 -> ["12", "31", "23"]
+# s="123123" factor=2 -> ["123", "123"]
+# s="123123" factor=3 -> ["12", "31", "23"]
 def split_string(s: str, factor: int) -> list[str]:
     return [s[i : i + factor] for i in range(0, len(s), factor)]
 
 
 def main():
     ranges = parse_input()
-    # part_one_answer = part_one(ranges)
+    part_one_answer = part_one(ranges)
     part_two_answer = part_two(ranges)
     print()
-    # print(f"part 1: {part_one_answer}")
+    print(f"part 1: {part_one_answer}")
     print(f"part 2: {part_two_answer}")
 
 
