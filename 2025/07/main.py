@@ -1,6 +1,6 @@
 def parse_input():
     rows = []
-    with open("input-test.txt") as file:
+    with open("input.txt") as file:
         while line := file.readline().rstrip():
             rows.append(list(line))
     return rows
@@ -18,7 +18,7 @@ def find_splits(x, y, grid, split_coords):
             print(f"split! [{x}, {y}]")
             if (x, y) in split_coords:
                 print(f"** {x}, {y} has already been visited")
-                return set()
+                return split_coords
             split_found = True
             split_coords.add((x, y))
             splits_left = find_splits(x, y - 1, grid, split_coords)
@@ -33,6 +33,33 @@ def find_splits(x, y, grid, split_coords):
     return split_coords
 
 
+def find_paths(x, y, grid, memo):
+    print(f"finding paths from x: {x}, y: {y}")
+
+    split_found = False
+    while (x != len(grid) - 1 and 0 <= y < len(grid[0])) and not split_found:
+        char = grid[x][y]
+        if char == "^":
+            print(f"split! [{x}, {y}]")
+            if (x, y) in memo:
+                print(f"** {x}, {y} has already been calculated")
+                return memo[(x, y)]
+            split_found = True
+            paths_left = find_paths(x, y - 1, grid, memo)
+            paths_right = find_paths(x, y + 1, grid, memo)
+            result = paths_left + paths_right
+            memo[(x, y)] = result
+            print(f"paths from [{x}, {y}]: {result}")
+            return result
+        x += 1
+
+    if x == len(grid) - 1:
+        print(f"reached bottom [{x, y}]")
+        return 1
+
+    return 0
+
+
 def part_one(grid) -> int:
     starting_idx = 0
     for y in range(len(grid[0])):
@@ -44,14 +71,28 @@ def part_one(grid) -> int:
     return len(coords)
 
 
+def part_two(grid) -> int:
+    starting_idx = 0
+    for y in range(len(grid[0])):
+        if grid[0][y] == "S":
+            starting_idx = y
+    print(f"starting_idx: {starting_idx}")
+    memo = {}
+    paths = find_paths(0, starting_idx, grid, memo)
+    return paths
+
+
 def main():
     grid = parse_input()
     for i, row in enumerate(grid):
         print(f"{i} {row}")
 
-    part_one_answer = part_one(grid)
+    # part_one_answer = part_one(grid)
+    # print()
+    # print(f"part one: {part_one_answer}")
+    part_two_answer = part_two(grid)
     print()
-    print(f"part one: {part_one_answer}")
+    print(f"part two: {part_two_answer}")
 
 
 main()
